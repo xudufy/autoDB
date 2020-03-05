@@ -9,6 +9,7 @@ type User struct  {
 	loggedIn bool
 }
 
+
 type LoginError string 
 
 func (e LoginError) Error() string {
@@ -20,8 +21,6 @@ type UserNotFoundError string
 func (e UserNotFoundError) Error() string {
 	return fmt.Sprintf("User Not Found: %s", string(e))
 }
-
-
 
 var data map[string]*User = make(map[string]*User)
 var tokenKey map[string]*User = make(map[string]*User)
@@ -87,7 +86,6 @@ func ModifyDeveloper(newUser *User) (bool, error) {
 		*usr = *newUser
 		return true, nil
 	}
-
 	return false, UserNotFoundError(newUser.Username)
 }
 

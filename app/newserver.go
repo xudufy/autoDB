@@ -19,6 +19,9 @@ func handler(w http.ResponseWriter, r *http.Request) {
 
 
 func main() {
+	developer.InitializeRemoteDB()
+	defer developer.CloseDB()
+
 
 	user := developer.User{Username:"ajwurts", Password: "password", Token: "token"}
 	fmt.Println(user)
@@ -61,4 +64,5 @@ func main() {
 		fmt.Println(err4)
 	}
 	fmt.Println(userTest)
+
 }
