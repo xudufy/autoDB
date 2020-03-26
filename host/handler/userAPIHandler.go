@@ -48,12 +48,19 @@ func RegisterHandler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		addUserStat, err := dbconfig.HostDB.Prepare("INSERT INTO users (username,email,pw) values (?, ?, ?)")
-		if err != nil {
-			fmt.Println(err.Error())
+		arg := map[string]interface{}{
+			"um": um,
+			"em": em,
+			"pw": passwordEncode(pw, um),
 		}
-		defer addUserStat.Close()
-		result, err := addUserStat.Exec(um, em, passwordEncode(pw, um))
+
+		query, args, err := dbconfig.PrepareNamedQuery("INSERT INTO users (username,email,pw) values (:um, :em, :pw)", arg)
+		if err != nil {
+			NewJSONError("register sql:"+err.Error(), 400, w)
+			return
+		}
+
+		result, err := dbconfig.HostDB.Exec(query, args...)
 		if err != nil {
 			NewJSONError("register sql:"+err.Error(), 400, w)
 			return
