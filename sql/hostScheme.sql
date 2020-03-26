@@ -19,14 +19,14 @@ create table users (
 
 create table projects (
 	pid int auto_increment primary key,
-    pname varchar(100) unique,
+    pname varchar(100) unique not null,
     create_time datetime default CURRENT_TIMESTAMP
 );
 
 create table project_developer (
 	uid int,
-    pid int,
-	privilege enum('owner', 'developer'),
+  pid int,
+	privilege enum('owner', 'developer') not null,
     primary key (uid, pid),
     foreign key (uid) references users(uid),
     foreign key (pid) references projects(pid) on delete cascade
@@ -65,7 +65,7 @@ DELIMITER ;
 create table tables(
 	tid int auto_increment primary key,
     pid int not null,
-    name varchar(64),
+    name varchar(64) not null,
     unique (pid, name),
     foreign key (pid) references projects(pid) on delete cascade,
     index (pid, name)
@@ -73,8 +73,9 @@ create table tables(
 
 create table apis (
 	aid char(64) unique, -- sha256 result
-	tid int,
-    name varchar(64),
+	tid int not null,
+  name varchar(64) not null,
+  type enum('public', 'user-domain') not null,
 	tmpl varchar(8192),
     primary key (tid, name),
     foreign key (tid) references tables(tid) on delete cascade

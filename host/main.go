@@ -4,7 +4,6 @@ import (
 	"autodb/host/dbconfig"
 	"autodb/host/globalsession"
 	"autodb/host/handler"
-	"database/sql"
 	"fmt"
 	"net/http"
 	"os"
@@ -18,6 +17,8 @@ func main() {
 	exePath := os.Args[0]
 	err := os.Chdir(filepath.Dir(exePath))
 
+	dbconfig.Init()
+
 	globalsession.Init()
 
 	handler.InitAllHTTPHandlers()
@@ -26,7 +27,7 @@ func main() {
 
 	port := 23456
 	portS := fmt.Sprintf(":%d", port)
-	fmt.Printf("listening on %s", portS)
+	fmt.Printf("listening on %s\n", portS)
 	err = http.ListenAndServe(portS, nil)
 	if err != nil {
 		fmt.Printf("%v", err)
@@ -34,17 +35,8 @@ func main() {
 }
 
 func sqlTest() {
-	_, err := sql.Open("mysql", dbconfig.DBBaseURL)
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-	dbHost, err := sql.Open("mysql", dbconfig.DBHostURL)
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-	tables, err := dbHost.Query("show tables;")
+
+	tables, err := dbconfig.HostDB.Query("show tables;")
 	if err != nil {
 		fmt.Println(err)
 		return
