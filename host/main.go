@@ -43,12 +43,18 @@ func sqlTest() {
 	}
 	defer tables.Close()
 
-	for tables.Next() {
-		var tablename string
-		err := tables.Scan(&tablename)
-		if err != nil {
-			fmt.Println(err)
-		}
-		fmt.Println(tablename)
+	//for tables.Next() {
+	//	var tablename string
+	//	err := tables.Scan(&tablename)
+	//	if err != nil {
+	//		fmt.Println(err)
+	//	}
+	//	fmt.Println(tablename)
+	//}
+	js, err:=dbconfig.ParseRowsToJSON(tables)
+	if err!=nil {
+		fmt.Println(err)
+		return
 	}
+	fmt.Println(js)
 }

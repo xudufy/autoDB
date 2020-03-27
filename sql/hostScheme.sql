@@ -20,12 +20,14 @@ create table users (
 create table projects (
 	pid int auto_increment primary key,
     pname varchar(100) unique not null,
-    create_time datetime default CURRENT_TIMESTAMP
+    pw char(64) not null,
+    create_time datetime default CURRENT_TIMESTAMP,
+    check ( pname <> 'autodb' )
 );
 
 create table project_developer (
 	uid int,
-  pid int,
+    pid int,
 	privilege enum('owner', 'developer') not null,
     primary key (uid, pid),
     foreign key (uid) references users(uid),
