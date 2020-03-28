@@ -1,4 +1,4 @@
--- drop database if exists autodb;
+drop database if exists autodb;
 create database autodb;
 
 use autodb;
@@ -82,3 +82,4 @@ create table apis (
     primary key (tid, name),
     foreign key (tid) references tables(tid) on delete cascade
 )
+

@@ -36,7 +36,7 @@ func main() {
 
 func sqlTest() {
 
-	tables, err := dbconfig.HostDB.Query("show tables;")
+	tables, err := dbconfig.HostDB.Query("select * from nullTest")
 	if err != nil {
 		fmt.Println(err)
 		return
