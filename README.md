@@ -1,6 +1,6 @@
-#AutoDB
+# AutoDB
 
-###How to Setup
+### How to Setup
 1. setup a MySQL Server.
 1. setup a DBA user for that Server.
 1. run sql/hostScheme.sql on the MySQL Server.
@@ -8,6 +8,6 @@
 1. build autodb/host and put the executable in bin/
 1. run the executable
 
-##Tests
+## Tests
 1. run sql/testData.sql
 1. run go test.
