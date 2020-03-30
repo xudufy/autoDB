@@ -76,10 +76,11 @@ create table tables(
 create table apis (
 	aid char(64) unique, -- sha256 result
 	tid int not null,
-  name varchar(64) not null,
-  type enum('public', 'user-domain') not null,
+    name varchar(64) not null,
+    type enum('public', 'user-domain', 'developer-domain') not null,
 	tmpl varchar(8192),
     primary key (tid, name),
-    foreign key (tid) references tables(tid) on delete cascade
+    foreign key (tid) references tables(tid) on delete cascade,
+    index (aid)
 )
 
