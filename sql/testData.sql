@@ -24,8 +24,9 @@ create table nullTest (
     intid INT default 14,
     time DATETIME default CURRENT_TIMESTAMP,
     nulltime DATETIME default null,
-    nullable int default null
+    nullable int default null,
+    nullstring varchar(60) default null
 );
 
-insert into nullTest (id, time) values (2147483649, '2020-03-28 08:00:00');
+insert into nullTest (id, time, nullstring) values (2147483649, '2020-03-28 08:00:00', '?? ?');
 insert into nullTest (id, time) values (1, '2020-03-29 08:00:00');

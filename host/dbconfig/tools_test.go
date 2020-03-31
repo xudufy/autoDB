@@ -26,3 +26,130 @@ func TestParseRowsToJSON(t *testing.T) {
 	}
 
 }
+
+func TestNamedParameterizedQuery(t *testing.T) {
+	a := map[string]interface{}{
+		"n_1":"id",
+		"n2":"intid",
+		"n3":"time",
+		"n4":"84",
+		"n5":100,
+		"n6":300.001,
+	}
+
+	q := []string {
+		`:`,
+		`::`,
+		`"?"`,
+		`'?'`,
+		`:n_1 :: :n4:::n5 ::::\:n6?`,
+		":n7",
+		`":n7"`,
+		`:n_1 :: 127,mr2h\vea :n4 :::n5 ::::\:n6`,
+		`:n_1 :: 127,mr2h\vea :n4 :::n5 ::::\:`,
+		`:n_1 ":n2" "':n3" "'':n3" ":n4"":n5"`,
+		`:n_1 "":n2"" "\":n3":n4""":n5"`,
+		`':n_1 '':n2'' '\':n3'':n4''':n5'`,
+	}
+
+	for _, qs := range q {
+		a1, a2, err := PrepareNamedQuery(qs,a)
+		if err!=nil {
+			fmt.Println(err)
+		}
+		fmt.Println(a1)
+		fmt.Println(a2)
+		fmt.Println("------------")
+	}
+
+	for _, qs := range q {
+		a1, a2, err := ParseNamedQuery(qs)
+		if err!=nil {
+			fmt.Println(err)
+		}
+		fmt.Println(a1)
+		fmt.Println(a2)
+		fmt.Println("------------")
+	}
+	/* correct answer:
+	At query:1: expect ':' or identifier.
+
+	[]
+	------------
+	:
+	[]
+	------------
+	"?"
+	[]
+	------------
+	'?'
+	[]
+	------------
+	? outside string literals found in query:25.
+
+	[]
+	------------
+	n7 is not provided.
+
+	[]
+	------------
+	":n7"
+	[]
+	------------
+	? : 127,mr2h\vea ? :? ::\?
+	[id 84 100 300.001]
+	------------
+	At query:37: expect ':' or identifier.
+
+	[]
+	------------
+	? ":n2" "':n3" "'':n3" ":n4"":n5"
+	[id]
+	------------
+	? ""?"" "\":n3"?""":n5"
+	[id intid 84]
+	------------
+	':n_1 '':n2'' '\'?''?''':n5'
+	[time 84]
+	------------
+	At query:1: expect ':' or identifier.
+
+	[]
+	------------
+	:
+	[]
+	------------
+	"?"
+	[]
+	------------
+	'?'
+	[]
+	------------
+	? outside string literals found in query:25.
+
+	[]
+	------------
+	?
+	[n7]
+	------------
+	":n7"
+	[]
+	------------
+	? : 127,mr2h\vea ? :? ::\?
+	[n_1 n4 n5 n6]
+	------------
+	At query:37: expect ':' or identifier.
+
+	[]
+	------------
+	? ":n2" "':n3" "'':n3" ":n4"":n5"
+	[n_1]
+	------------
+	? ""?"" "\":n3"?""":n5"
+	[n_1 n2 n4]
+	------------
+	':n_1 '':n2'' '\'?''?''':n5'
+	[n3 n4]
+	------------
+	*/
+}
