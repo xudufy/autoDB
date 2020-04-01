@@ -20,7 +20,6 @@ create table users (
 create table projects (
 	pid int auto_increment primary key,
     pname varchar(100) unique not null,
-    pw char(64) not null,
     create_time datetime default CURRENT_TIMESTAMP,
     check ( pname <> 'autodb' )
 );

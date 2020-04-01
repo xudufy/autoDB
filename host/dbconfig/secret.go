@@ -3,8 +3,10 @@ package dbconfig
 import "database/sql"
 
 const (
-	DBRootURL = "autodb:S20-CS542@tcp(localhost:3306)/"
-	DBHostURL = "autodb:S20-CS542@tcp(localhost:3306)/autodb"
+	DBRoot = "@tcp(localhost:3306)/"
+	DBACredential = "autodb:S20-CS542"
+	DBRootURL = DBACredential + DBRoot + "?multiStatements=true"
+	DBHostURL = DBACredential + DBRoot + "autodb?multiStatements=true"
 )
 
 var HostDB *sql.DB
