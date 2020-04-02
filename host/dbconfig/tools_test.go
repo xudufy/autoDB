@@ -19,9 +19,9 @@ func TestParseRowsToJSON(t *testing.T) {
 		fmt.Println(err)
 		return
 	}
-	fmt.Println(js)
+	fmt.Println(string(js))
 	ans := `{"result":[["id","intid","time","nulltime","nullable","nullstring"],["1",14,"2020-03-29T12:00:00Z",null,null,null],["2147483649",14,"2020-03-28T12:00:00Z",null,null,"?? ?"]]}`
-	if js!=ans {
+	if string(js)!=ans {
 		t.Errorf("answer is not right")
 	}
 

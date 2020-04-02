@@ -81,12 +81,4 @@ create table apis (
     primary key (tid, name),
     foreign key (tid) references tables(tid) on delete cascade,
     index (aid)
-)
-
-create table api_parameters (
-    aid char(64) unique,
-    name varchar(64),
-    input_type enum('string', 'time', 'int', 'double'),
-    primary key (aid, name),
-    foreign key (aid) references apis(aid) on delete cascade
-)
+);

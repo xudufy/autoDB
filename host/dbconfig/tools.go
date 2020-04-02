@@ -226,11 +226,11 @@ func interpretColumnType(colType *sql.ColumnType , v interface{}) interface{} {
 
 }
 
-func ParseRowsToJSON (rows *sql.Rows) (string, error) { //need test for all types including null
+func ParseRowsToJSON (rows *sql.Rows) ([]byte, error) { //need test for all types including null
 	result := make([][]interface{}, 0, 50)
 	cols, err:=rows.Columns()
 	if err!=nil {
-		return "", err
+		return nil, err
 	}
 	colTypes, err:= rows.ColumnTypes()
 
@@ -250,7 +250,7 @@ func ParseRowsToJSON (rows *sql.Rows) (string, error) { //need test for all type
 	for rows.Next() {
 		err:=rows.Scan(interfaceResult...)
 		if err!=nil {
-			return "", err
+			return nil, err
 		}
 		result = append(result, make([]interface{}, len(cols)))
 		l := len(result) - 1
@@ -265,5 +265,5 @@ func ParseRowsToJSON (rows *sql.Rows) (string, error) { //need test for all type
 	if err!=nil {
 		panic(err)
 	}
-	return string(resultJSON), nil
+	return resultJSON, nil
 }
