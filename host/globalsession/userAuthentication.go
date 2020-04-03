@@ -2,7 +2,6 @@ package globalsession
 
 import (
 	"autodb/host/dbconfig"
-	"encoding/json"
 	"errors"
 	"net/http"
 
@@ -12,16 +11,17 @@ import (
 var GSess *session.Manager
 
 func Init() {
-	var cfg session.ManagerConfig
-	json.Unmarshal([]byte(`{
-		"cookieName":"__autodb", 
-		"enableSetCookie,omitempty": true, 
-		"gclifetime":3600, 
-		"maxLifetime": 3600, 
-		"secure": false, 
-		"cookieLifeTime": 3600, 
-		"providerConfig": ""}`), &cfg)
-	GSess, _ = session.NewManager("memory", &cfg)
+	cfg := new(session.ManagerConfig)
+	*cfg = session.ManagerConfig{
+		CookieName:"__autodb",
+		EnableSetCookie: true,
+		Gclifetime:3600,
+		Maxlifetime: 3600,
+		Secure: false,
+		CookieLifeTime: 3600,
+		ProviderConfig: "",
+	}
+	GSess, _ = session.NewManager("memory", cfg)
 	go GSess.GC()
 }
 
@@ -32,6 +32,7 @@ const (
 	UserGroupOther
 )
 
+//will return -1, err if not logged in.
 func GetUid(w http.ResponseWriter, r *http.Request) (int, error) {
 	sess, _ := GSess.SessionStart(w, r)
 	defer sess.SessionRelease(w)
@@ -43,29 +44,30 @@ func GetUid(w http.ResponseWriter, r *http.Request) (int, error) {
 	return uid, nil
 }
 
-func GetUserIdAndGroupToProject (pid int, w http.ResponseWriter, r *http.Request) (int, int) {
-	uid, _ := GetUid(w,r)
+//uid<0 indicate not logged in.
+func GetGroupToProject (uid int, pid int) int {
+
 	if uid<0 {
-		return uid, UserGroupOther
+		return UserGroupOther
 	}
 
 	devRow, err := dbconfig.HostDB.Query("select privilege from project_developer where uid = ? and pid = ?;", uid, pid)
 	if err!= nil {
 		panic(err) //dbconnection issue.
-		return uid, UserGroupUser
+		return UserGroupUser
 	}
 	defer devRow.Close()
 
 	var privilege string
 	if devRow.Next() {
-		devRow.Scan(&privilege)
+		_ = devRow.Scan(&privilege)
 	}
 
 	if privilege=="owner" {
-		return uid, UserGroupOwner
+		return UserGroupOwner
 	} else if privilege=="developer" {
-		return uid, UserGroupDeveloper
+		return UserGroupDeveloper
 	}
 
-	return uid, UserGroupUser
+	return UserGroupUser
 }

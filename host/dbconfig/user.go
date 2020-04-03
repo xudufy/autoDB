@@ -5,16 +5,19 @@ import (
 	"fmt"
 	"strconv"
 	"strings"
+	"sync"
 )
 
 const (
 	SchemaPw = "OSF3t-t2S3tG2S-4t4Et2"
 )
 
-var dbConnMap map[string]*sql.DB
+var dbConnMap map[string]*sql.DB // init in secret.go:Init()
+var connMapLock sync.RWMutex
 
 func addConn(url string, db *sql.DB) {
-
+	connMapLock.Lock()
+	defer connMapLock.Unlock()
 	if len(dbConnMap)>2000 {
 		for _, conn := range dbConnMap {
 			_ = conn.Close()
@@ -30,10 +33,9 @@ func addConn(url string, db *sql.DB) {
 }
 
 func getConn(url string) (*sql.DB, error) {
-	if dbConnMap==nil {
-		dbConnMap = make(map[string]*sql.DB)
-	}
+	connMapLock.RLock()
 	db, ok := dbConnMap[url]
+	connMapLock.RUnlock()
 	if !ok {
 		dbc, err := sql.Open("mysql", url)
 		if err!=nil {
@@ -44,6 +46,16 @@ func getConn(url string) (*sql.DB, error) {
 		db = dbc
 	}
 	return db, nil
+}
+
+func dropConn(url string) {
+	connMapLock.Lock()
+	defer connMapLock.Unlock()
+	db, ok := dbConnMap[url]
+	if ok {
+		_ = db.Close()
+		delete(dbConnMap, url)
+	}
 }
 
 func ComposeDBUrl(username string, pw string, schemaName string) string {
@@ -111,3 +123,36 @@ func AddProjectUser(pid int, schemaName string) error {
 	return err
 }
 
+func DeleteProjectUser(pid int, schemaName string) error {
+	tx, err := RootDB.Begin()
+	if err!=nil {
+		return err
+	}
+
+	internalUser := `'`+ strconv.Itoa(pid) + `_internal'@'localhost'`
+	publicUser := `'`+ strconv.Itoa(pid) + `_public'@'localhost'`
+
+	var queries strings.Builder
+	queries.WriteString(`DROP USER IF EXISTS `+ internalUser +`, `+ publicUser + `; ` + "\n")
+
+	_, err = RootDB.Exec(queries.String())
+	if err!=nil {
+		if err := tx.Rollback(); err!=nil {
+			fmt.Println(err)
+			return err
+		}
+		return err
+	}
+	err = tx.Commit()
+	if err!=nil {
+		if err := tx.Rollback(); err!=nil {
+			fmt.Println(err)
+			return err
+		}
+		return err
+	}
+
+	dropConn(composeProjectPublicDBUrl(pid, schemaName))
+	dropConn(composeProjectInternalDBUrl(pid, schemaName))
+	return nil
+}

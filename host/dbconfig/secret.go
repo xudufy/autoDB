@@ -23,4 +23,6 @@ func Init() {
 		panic("root DB connection failed.")
 	}
 	RootDB = tRootDB
+
+	dbConnMap = make(map[string]*sql.DB)
 }

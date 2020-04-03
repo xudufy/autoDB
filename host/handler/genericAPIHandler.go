@@ -137,7 +137,8 @@ func apiHandler(w http.ResponseWriter, r *http.Request) {
 
 	uid := -1
 	if apiType!="public" {
-		uidTemp, group := globalsession.GetUserIdAndGroupToProject(pid, w, r)
+		uidTemp, _ := globalsession.GetUid(w,r)
+		group := globalsession.GetGroupToProject(uidTemp, pid)
 		if group==globalsession.UserGroupOther {
 			NewJSONError("login required", 403, w)
 			return

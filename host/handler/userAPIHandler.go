@@ -30,7 +30,6 @@ func (*UserAPIHandler) Init() {
 func passwordEncode(pw string, username string) string {
 	raw := "AUTODB0468091" + pw + "#HG00fh3n" + username
 	after := fmt.Sprintf("%x", sha256.Sum256([]byte(raw)))
-	fmt.Println(after)
 	return after
 }
 

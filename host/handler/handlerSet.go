@@ -24,5 +24,6 @@ func InitAllHTTPHandlers() {
 	new(StaticHandler).Init()
 	new(UserAPIHandler).Init()
 	new(GenericAPIHandler).Init()
+	new(ProjectListHandler).Init()
 
 }
