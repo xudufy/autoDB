@@ -56,5 +56,5 @@ func sqlTest() {
 		fmt.Println(err)
 		return
 	}
-	fmt.Println(js)
+	fmt.Println(string(js))
 }
