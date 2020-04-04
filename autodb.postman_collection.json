@@ -1,0 +1,132 @@
+{
+	"info": {
+		"_postman_id": "acb02731-f0f9-44f6-ab18-2a9c8d4fec03",
+		"name": "autodb",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "login",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:23456/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "23456",
+					"path": [
+						"login"
+					]
+				},
+				"description": "login"
+			},
+			"response": []
+		},
+		{
+			"name": "register",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "username",
+							"value": "test1",
+							"type": "text"
+						},
+						{
+							"key": "email",
+							"value": "test1@test1.com",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "test1pw",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:23456/register",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "23456",
+					"path": [
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "logout",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": ""
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "createProject",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:23456/createProject",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "23456",
+					"path": [
+						"createProject"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "deleteProject",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:23456/deleteProject",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "23456",
+					"path": [
+						"deleteProject"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "projectList",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": ""
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}
