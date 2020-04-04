@@ -26,7 +26,7 @@ func Init() {
 }
 
 const (
-	UserGroupOwner = iota
+	UserGroupOwner = 1 << iota
 	UserGroupDeveloper
 	UserGroupUser
 	UserGroupOther
