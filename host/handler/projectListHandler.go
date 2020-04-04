@@ -21,7 +21,6 @@ func (*ProjectListHandler) Init() {
 	http.HandleFunc("/deleteProject", deleteProjectHandler)
 }
 
-//TODO: test
 func projectListHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != "GET" {
 		http.NotFound(w, r)
@@ -60,7 +59,6 @@ func projectListHandler(w http.ResponseWriter, r *http.Request) {
 
 }
 
-//TODO: test
 //insert a info row into autodb.projects.
 //insert a info row into autodb.project_developer
 //create a database with projects.pname
@@ -131,7 +129,7 @@ func createProjectHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	_, err = tx.Exec(`CREATE DATABASE ?`, pname)
+	_, err = tx.Exec(`CREATE DATABASE ` +pname+ `;`)
 	if err!=nil {
 		NewJSONError(err.Error(), 502, w)
 		return
@@ -153,7 +151,6 @@ func createProjectHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 // I have a feel that this will be buggy
-//TODO: test
 func deleteProjectHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method!="POST" {
 		http.NotFound(w, r)
@@ -216,12 +213,22 @@ func deleteProjectHandler(w http.ResponseWriter, r *http.Request) {
 		NewJSONError(err.Error(), 502, w)
 		return
 	}
+	defer func() {
+		if err!=nil {
+			_ = dbconfig.AddProjectUser(pid, pname)
+		}
+	}()
 
-	_, err = dbconfig.RootDB.Exec(`drop database if exists ?;`, pname)
+	_, err = dbconfig.RootDB.Exec(`drop database if exists ` + pname + `;`)
 	if err!=nil {
 		NewJSONError(err.Error(), 502, w)
 		return
 	}
+	defer func() {
+		if err!=nil {
+			_, _ = dbconfig.RootDB.Exec(`CREATE DATABASE ` +pname+ `;`)
+		}
+	}()
 
 	_, err = dbconfig.HostDB.Exec(`delete from projects where pid=?`, pid)
 	if err!=nil {
