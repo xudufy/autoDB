@@ -224,15 +224,10 @@ func deleteProjectHandler(w http.ResponseWriter, r *http.Request) {
 		NewJSONError(err.Error(), 502, w)
 		return
 	}
-	defer func() {
-		if err!=nil {
-			_, _ = dbconfig.RootDB.Exec(`CREATE DATABASE ` +pname+ `;`)
-		}
-	}()
 
 	_, err = dbconfig.HostDB.Exec(`delete from projects where pid=?`, pid)
 	if err!=nil {
-		NewJSONError(err.Error(), 502, w)
+		NewJSONError(`Project has been deleted, but metadata update failed. A metadata sync may fix the problem.`, 502, w)
 		return
 	}
 

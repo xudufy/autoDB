@@ -22,6 +22,7 @@ func (*TableListHandler) Init() {
 	http.HandleFunc("/deleteTable", deleteTableHandler)
 }
 
+
 func viewTableListHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method!="GET" {
 		http.NotFound(w, r)
@@ -90,7 +91,7 @@ type TableInfo struct {
 	Options string `json:"options"`
 }
 
-//TODO: test
+
 func addTableHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method!="POST" {
 		http.NotFound(w, r)
@@ -162,7 +163,7 @@ func addTableHandler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		if ok, _ := regexp.MatchString(`^[^,;]$`, v.Options); !ok {
+		if ok, _ := regexp.MatchString(`^[^,;]*$`, v.Options); !ok {
 			NewJSONError("column options should not contain , and ;", 400, w)
 			return
 		}
@@ -178,7 +179,29 @@ func addTableHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	options := strings.Split(form.Options, ",")
+	var filteredOptions strings.Builder
+	filteredOptions.Reset()
+	parenthesesLevel := 0
+	for _, ch := range form.Options {
+		switch ch {
+		case '(':
+			parenthesesLevel++
+		case ')':
+			parenthesesLevel--
+			if parenthesesLevel<0 {
+				NewJSONError(`table option parentheses do not paired`, 400, w)
+				return
+			}
+		case ',':
+			if parenthesesLevel>0 {
+				filteredOptions.WriteRune(';') // we already tested that there is no ';' in form.Options
+				continue
+			}
+		}
+		filteredOptions.WriteRune(ch)
+	}
+
+	options := strings.Split(filteredOptions.String(), ",")
 	for _, vo := range options {
 		v := strings.TrimSpace(vo)
 		flag := (v=="") || strings.HasPrefix(v, "PRIMARY KEY")
@@ -267,5 +290,72 @@ func checkColumnType(coltype string) bool {
 }
 
 func deleteTableHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method!="POST" {
+		http.NotFound(w, r)
+		return
+	}
+
+	err := r.ParseForm()
+	if err!=nil {
+		NewJSONError("parameter error", 400, w)
+		return
+	}
+	tidS := r.FormValue("tid")
+	if tidS=="" {
+		http.NotFound(w, r)
+		return
+	}
+	tid, err := strconv.Atoi(tidS)
+	if err!=nil {
+		http.NotFound(w, r)
+		return
+	}
+
+	pRow, err := dbconfig.HostDB.Query(`select P.pid, pname, T.name from (select pid, name from tables where tid = ?) T inner join projects P on P.pid = T.pid;`, tid)
+	if err!=nil {
+		NewJSONError(err.Error(), 502, w)
+		return
+	}
+	defer pRow.Close()
+
+	pid := -1
+	pname := ""
+	tname := ""
+	if pRow.Next() {
+		_ = pRow.Scan(&pid, &pname, &tname)
+	}
+	if pid==-1 || pname == "" || tname == ""{
+		NewJSONError(`Table not found`, 404, w)
+		return
+	}
+
+	uid, err := globalsession.GetUid(w, r)
+	if err!=nil {
+		NewJSONError(err.Error(), 403, w)
+		return
+	}
+	group:= globalsession.GetGroupToProject(uid, pid)
+	if (group & (globalsession.UserGroupOwner | globalsession.UserGroupDeveloper)) == 0 {
+		NewJSONError("Not Authorized",403, w)
+		return
+	}
+
+	inConn, err := dbconfig.GetProjectInternalConn(pid, pname)
+	if err!=nil {
+		NewJSONError(err.Error(), 502, w)
+		return
+	}
+
+	_, err = inConn.Exec(`drop table ` + tname + `;`)
+	if err!=nil {
+		NewJSONError(`cannot drop the table ` + err.Error(), 502, w)
+		return
+	}
+
+	_, err = dbconfig.HostDB.Exec(`delete from tables where tid = ?`, tid)
+	if err!=nil {
+		NewJSONError(`Table has been deleted, but metadata update failed. A metadata sync may fix the problem.`, 502, w)
+		return
+	}
 
 }

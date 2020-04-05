@@ -13,6 +13,21 @@
 				},
 				"method": "POST",
 				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "email",
+							"value": "test1@test1.com",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "test1pw",
+							"type": "text"
+						}
+					]
+				},
 				"url": {
 					"raw": "http://localhost:23456/login",
 					"protocol": "http",
@@ -73,7 +88,34 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": ""
+					"raw": "http://localhost:23456/logout",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "23456",
+					"path": [
+						"logout"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "projectList",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:23456/projects",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "23456",
+					"path": [
+						"projects"
+					]
 				}
 			},
 			"response": []
@@ -83,6 +125,16 @@
 			"request": {
 				"method": "POST",
 				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "name",
+							"value": "test1P1",
+							"type": "text"
+						}
+					]
+				},
 				"url": {
 					"raw": "http://localhost:23456/createProject",
 					"protocol": "http",
@@ -102,6 +154,16 @@
 			"request": {
 				"method": "POST",
 				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "pid",
+							"value": "8",
+							"type": "text"
+						}
+					]
+				},
 				"url": {
 					"raw": "http://localhost:23456/deleteProject",
 					"protocol": "http",
@@ -117,12 +179,84 @@
 			"response": []
 		},
 		{
-			"name": "projectList",
+			"name": "tableList",
 			"request": {
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": ""
+					"raw": "http://localhost:23456/project?pid=9",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "23456",
+					"path": [
+						"project"
+					],
+					"query": [
+						{
+							"key": "pid",
+							"value": "9"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "addTable",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\t\t\"name\": \"test1t1\",\r\n\t\t\"columns\": [\r\n\t\t\t{\r\n\t\t\t\t\"name\":\"id\",\r\n\t\t\t\t\"type\": \"INT\",\r\n\t\t\t\t\"options\":\"PRIMARY KEY auto_increment\"\r\n\t\t\t},{\r\n\t\t\t\t\"name\":\"time\",\r\n\t\t\t\t\"type\": \"DATETIME\",\r\n\t\t\t\t\"options\":\"DEFAULT CURRENT_TIMESTAMP\"\r\n\t\t\t}\r\n\t\t],\r\n\t\t\"options\":\"UNIQUE(id, time), INDEX(time)\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:23456/addTable/9",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "23456",
+					"path": [
+						"addTable",
+						"9"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "deleteTable",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "tid",
+							"value": "2",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:23456/deleteTable",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "23456",
+					"path": [
+						"deleteTable"
+					]
 				}
 			},
 			"response": []
