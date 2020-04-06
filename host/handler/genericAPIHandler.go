@@ -3,13 +3,11 @@ package handler
 import (
 	"autodb/host/dbconfig"
 	"autodb/host/globalsession"
-	"bytes"
 	"encoding/json"
 	"errors"
 	"fmt"
 	"io"
 	"net/http"
-	"strconv"
 	"strings"
 	"time"
 )
@@ -182,11 +180,7 @@ func apiHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.Header().Set("Content-Type", "application/json")
-	w.Header().Set("Content-Length", strconv.Itoa(len(js)))
-	
-	jsReader := bytes.NewReader(js)
-	_, err = io.Copy(w, jsReader)
+	err = WriteJSON(js, w)
 
 	if err!=nil {
 		NewJSONError(err.Error(), 502, w) //should not happen.

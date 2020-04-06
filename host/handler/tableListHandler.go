@@ -58,6 +58,19 @@ func viewTableListHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	pname:=""
+
+	pnameRows, err := dbconfig.HostDB.Query(`select pname from projects where pid=?;`, pid)
+	if err!=nil {
+		NewJSONError(err.Error(), 502, w)
+		return
+	}
+	defer pnameRows.Close()
+
+	if pnameRows.Next() {
+		_ = pnameRows.Scan(&pname)
+	}
+
 	tableRows, err := dbconfig.HostDB.Query(`select tid, name from tables where pid = ?;`, pid)
 	if err!=nil {
 		NewJSONError(err.Error(), 502, w)
@@ -71,7 +84,11 @@ func viewTableListHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = tableListTmpl.Execute(w, string(js))
+	tmplArgs := make(map[string]interface{})
+	tmplArgs["Pid"] = pid
+	tmplArgs["Pname"] = pname
+	tmplArgs["List"] = string(js)
+	err = tableListTmpl.Execute(w, tmplArgs)
 	if err!=nil {
 		NewJSONError(err.Error(), 502, w)
 		return

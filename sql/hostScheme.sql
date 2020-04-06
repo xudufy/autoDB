@@ -14,7 +14,8 @@ create table users (
 	uid int primary key auto_increment,
     email varchar(100) not null unique,
     pw char(64) not null, -- sha256 result
-    username varchar(100) not null
+    username varchar(100) not null,
+    index ((UPPER(username)))
 );
 
 create table projects (
