@@ -4,6 +4,7 @@ import (
 	"autodb/host/dbconfig"
 	"autodb/host/globalsession"
 	"database/sql"
+	"fmt"
 	"html/template"
 	"net/http"
 	"regexp"
@@ -100,6 +101,7 @@ func viewDevelopersHandler(w http.ResponseWriter, r *http.Request) {
 
 }
 
+//TODO:test
 func addDeveloperHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method!="POST" {
 		http.NotFound(w, r)
@@ -151,13 +153,17 @@ func addDeveloperHandler(w http.ResponseWriter, r *http.Request) {
 
 	_, err = dbconfig.HostDB.Exec(`insert into project_developer (uid, pid, privilege) VALUES (?,?,?)`, newUid, pid, privilege)
 	if err != nil {
-		NewJSONError("insert error, maybe the user has been added, or uid is invalid", 502, w)
-		return
+		fmt.Println(err)
+		_, err = dbconfig.HostDB.Exec(`update project_developer set privilege=? where pid=? and uid=? and privilege='deleted';`, privilege, pid, newUid)
+		if err!=nil {
+			NewJSONError("insert error, maybe the user has been added or pid, uid are not valid", 502, w)
+			return
+		}
 	}
 
 }
 
-//TODO: test
+//tested
 //we search exact match of uid and username (case insensitive),
 //and prefix match of username if len(entry)>3.
 func searchUserHandler(w http.ResponseWriter, r *http.Request) {
@@ -228,10 +234,103 @@ func searchUserHandler(w http.ResponseWriter, r *http.Request) {
 
 }
 
+//TODO:test
 func deleteDeveloperHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method!="POST" {
+		http.NotFound(w, r)
+		return
+	}
+
+	err := r.ParseForm()
+	if err!=nil {
+		NewJSONError("parameter error", 400, w)
+		return
+	}
+
+	pidS := r.Form.Get("pid")
+	pid, err := strconv.Atoi(pidS)
+	if err!=nil {
+		NewJSONError("parameter error", 400, w)
+		return
+	}
+
+	newUidS := r.Form.Get("uid")
+	newUid, err := strconv.Atoi(newUidS)
+	if err!=nil {
+		NewJSONError("parameter error", 400, w)
+		return
+	}
+
+	uid, err := globalsession.GetUid(w, r)
+	if err!=nil {
+		NewJSONError(err.Error(), 403, w)
+		return
+	}
+
+	group := globalsession.GetGroupToProject(uid, pid)
+	if (group & globalsession.UserGroupOwner) == 0 {
+		NewJSONError("Not Authorized", 403, w)
+		return
+	}
+
+	_, err = dbconfig.HostDB.Exec(`update project_developer set privilege='deleted' where pid=? and uid=? and privilege<>'deleted';`, pid, newUid)
+	if err!=nil {
+		NewJSONError("pid, uid not found", 400, w)
+		fmt.Println(err.Error())
+		return
+	}
 
 }
 
+//TODO: test
 func setDeveloperGroupHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method!="POST" {
+		http.NotFound(w, r)
+		return
+	}
+
+	err := r.ParseForm()
+	if err!=nil {
+		NewJSONError("parameter error", 400, w)
+		return
+	}
+
+	pidS := r.Form.Get("pid")
+	pid, err := strconv.Atoi(pidS)
+	if err!=nil {
+		NewJSONError("parameter error", 400, w)
+		return
+	}
+
+	newUidS := r.Form.Get("uid")
+	newUid, err := strconv.Atoi(newUidS)
+	privilege := r.Form.Get("privilege")
+	if err!=nil || privilege=="" {
+		NewJSONError("parameter error", 400, w)
+		return
+	}
+
+	if privilege!="owner" && privilege!="developer" {
+		NewJSONError("Unsupported privilege", 400, w)
+		return
+	}
+
+	uid, err := globalsession.GetUid(w, r)
+	if err!=nil {
+		NewJSONError(err.Error(), 403, w)
+		return
+	}
+
+	group := globalsession.GetGroupToProject(uid, pid)
+	if (group & globalsession.UserGroupOwner) == 0 {
+		NewJSONError("Not Authorized", 403, w)
+		return
+	}
+
+	_, err = dbconfig.HostDB.Exec(`update project_developer set privilege=? where uid = ? and pid = ? and privilege<>'deleted';`, newUid, pid, privilege)
+	if err != nil {
+		NewJSONError(err.Error(), 502, w)
+		return
+	}
 
 }
