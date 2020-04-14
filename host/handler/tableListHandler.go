@@ -4,6 +4,7 @@ import (
 	"autodb/host/dbconfig"
 	"autodb/host/globalsession"
 	"encoding/json"
+	"errors"
 	"html/template"
 	"net/http"
 	"regexp"
@@ -108,6 +109,21 @@ type TableInfo struct {
 	Options string `json:"options"`
 }
 
+func checkColumn(v ColumnInfo) error {
+	if ok, _ := regexp.MatchString(`^[A-Za-z_][\w_]{0,63}$`, v.Name); !ok {
+		return errors.New("column name" + v.Name + " invalid")
+	}
+
+	if ok, _ := regexp.MatchString(`^[^,;]*$`, v.Options); !ok {
+		return errors.New("column options should not contain , and ;")
+	}
+
+	if ok := checkColumnType(v.ColType);!ok {
+		return errors.New("column type unsupported")
+	}
+
+	return nil
+}
 
 func addTableHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method!="POST" {
@@ -169,24 +185,15 @@ func addTableHandler(w http.ResponseWriter, r *http.Request) {
 
 	//fmt.Println(form)
 
-	if ok, _ := regexp.MatchString(`^[A-Za-z_][\w_]{0,63}$`, form.Name); !ok {
+	if ok := dbconfig.IsIdentifier(form.Name); !ok {
 		NewJSONError("table name invalid", 400, w)
 		return
 	}
 
 	for _, v := range form.Columns {
-		if ok, _ := regexp.MatchString(`^[A-Za-z_][\w_]{0,63}$`, v.Name); !ok {
-			NewJSONError("column name" + v.Name + " invalid", 400, w)
-			return
-		}
-
-		if ok, _ := regexp.MatchString(`^[^,;]*$`, v.Options); !ok {
-			NewJSONError("column options should not contain , and ;", 400, w)
-			return
-		}
-
-		if ok := checkColumnType(v.ColType);!ok {
-			NewJSONError( "column type unsupported", 400, w)
+		err = checkColumn(v)
+		if err!=nil {
+			NewJSONError(err.Error(), 400, w)
 			return
 		}
 	}

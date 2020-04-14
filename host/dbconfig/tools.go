@@ -16,6 +16,9 @@ func IsIdentifierLetter(ch rune) bool {
 	return (ch>='0' && ch<='9') || (ch>='a' && ch<='z') || (ch>='A' && ch<='Z') || ch=='_'
 }
 
+var reservedWordSet map[string]struct{}
+var sig struct{}
+
 func IsIdentifier(s string) bool {
 	firstRune, _ := utf8.DecodeRuneInString(s)
 	if unicode.IsNumber(firstRune) {
@@ -26,6 +29,24 @@ func IsIdentifier(s string) bool {
 		if !IsIdentifierLetter(ch) {
 			return false
 		}
+	}
+
+
+	if reservedWordSet == nil {
+		//should add all of the reserved words in https://doc.ispirer.com/sqlways/Output/SQLWays-1-205.html
+		reservedWordSet = map[string]struct{}{
+			"INDEX":sig,
+			"ENUM":sig,
+			"MEDIUMTEXT":sig,
+			"VARCHAR":sig,
+			"DOUBLE":sig,
+			"SET":sig,
+		}
+	}
+
+
+	if _, ok := reservedWordSet[strings.ToUpper(strings.TrimSpace(s))]; ok {
+		return false
 	}
 
 	return true

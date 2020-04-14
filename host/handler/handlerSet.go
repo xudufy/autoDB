@@ -39,5 +39,6 @@ func InitAllHTTPHandlers() {
 	new(ProjectListHandler).Init()
 	new(TableListHandler).Init()
 	new(DeveloperListHandler).Init()
+	new(TableViewHandler).Init()
 
 }

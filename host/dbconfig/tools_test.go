@@ -32,7 +32,41 @@ func TestParseRowsToJSON2(t *testing.T) {
 	rows, err := HostDB.Query(`describe nulltest;`)
 	if err != nil {
 		fmt.Println(err)
-		return.
+		return
+	}
+	defer rows.Close()
+
+	js, err:=ParseRowsToJSON(rows)
+	if err!=nil {
+		fmt.Println(err)
+		return
+	}
+	fmt.Println(string(js))
+}
+
+func TestParseRowsToJSON4(t *testing.T) {
+	Init()
+	rows, err := HostDB.Query(`show indexes from nulltest;`)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	defer rows.Close()
+
+	js, err:=ParseRowsToJSON(rows)
+	if err!=nil {
+		fmt.Println(err)
+		return
+	}
+	fmt.Println(string(js))
+}
+
+func TestParseRowsToJSON3(t *testing.T) {
+	Init()
+	rows, err := HostDB.Query(`insert into nullTest (id, time) values (11, '2020-03-29 08:00:00');describe nulltest;`)
+	if err != nil {
+		fmt.Println(err)
+		return
 	}
 	defer rows.Close()
 

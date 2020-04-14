@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"html/template"
 	"net/http"
-	"regexp"
 	"strconv"
 )
 
@@ -93,7 +92,7 @@ func createProjectHandler(w http.ResponseWriter, r *http.Request) {
 
 	pname = r.Form.Get("name")
 
-	if ok, err:=regexp.MatchString(`^[A-Za-z_][\w_]{0,63}$`, pname); err!=nil || !ok{
+	if ok := dbconfig.IsIdentifier(pname); !ok{
 		NewJSONError("Parameter Error", 400, w)
 		return
 	}

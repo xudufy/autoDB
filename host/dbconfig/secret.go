@@ -25,4 +25,5 @@ func Init() {
 	RootDB = tRootDB
 
 	dbConnMap = make(map[string]*sql.DB)
+	reservedWordSet = nil
 }
