@@ -27,6 +27,23 @@ func TestParseRowsToJSON(t *testing.T) {
 
 }
 
+func TestParseRowsToJSON2(t *testing.T) {
+	Init()
+	rows, err := HostDB.Query(`describe nulltest;`)
+	if err != nil {
+		fmt.Println(err)
+		return.
+	}
+	defer rows.Close()
+
+	js, err:=ParseRowsToJSON(rows)
+	if err!=nil {
+		fmt.Println(err)
+		return
+	}
+	fmt.Println(string(js))
+}
+
 func TestNamedParameterizedQuery(t *testing.T) {
 	a := map[string]interface{}{
 		"n_1":"id",
