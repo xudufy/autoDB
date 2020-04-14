@@ -85,5 +85,5 @@ create table apis (
 	tmpl varchar(8192),
     primary key (tid, name),
     foreign key (tid) references tables(tid) on delete cascade,
-    index (aid)
+    index (aid(10))
 );
