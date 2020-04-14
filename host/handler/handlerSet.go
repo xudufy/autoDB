@@ -40,5 +40,6 @@ func InitAllHTTPHandlers() {
 	new(TableListHandler).Init()
 	new(DeveloperListHandler).Init()
 	new(TableViewHandler).Init()
+	new(ApiViewHandler).Init()
 
 }
