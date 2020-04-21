@@ -3,7 +3,7 @@ package dbconfig
 import "database/sql"
 
 const (
-	DBRoot = "@tcp(localhost:3306)/"
+	DBRoot = "@tcp(mysql:3306)/"
 	DBACredential = "autodb:S20-CS542"
 	DBRootURL = DBACredential + DBRoot + "?multiStatements=true"
 	DBHostURL = DBACredential + DBRoot + "autodb?multiStatements=true"

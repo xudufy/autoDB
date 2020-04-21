@@ -1,0 +1,4 @@
+    command:
+      - mysql -h localhost -u autodb -p
+    command:
+      - S20-CS542
