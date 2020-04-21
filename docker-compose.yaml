@@ -24,7 +24,7 @@ services:
     depends_on:
     - "mysql"
     ports:
-    - 8080:23456
+    - 23456:23456
 
 volumes:
   sqldata:
