@@ -4,8 +4,8 @@ import (
 	"autodb/host/dbconfig"
 	"autodb/host/globalsession"
 	"database/sql"
+	"encoding/json"
 	"fmt"
-	"html/template"
 	"net/http"
 	"regexp"
 	"strconv"
@@ -14,10 +14,10 @@ import (
 
 type DeveloperListHandler struct{}
 
-var devTmpl *template.Template
+//var devTmpl *template.Template
 
 func (*DeveloperListHandler) Init() {
-	devTmpl, _ = template.ParseFiles("../view/developers.html")
+	//devTmpl, _ = template.ParseFiles("../view/developers.html")
 	http.HandleFunc("/developers", viewDevelopersHandler)
 	http.HandleFunc("/addDeveloper", addDeveloperHandler)
 	http.HandleFunc("/deleteDeveloper", deleteDeveloperHandler)
@@ -83,7 +83,7 @@ func viewDevelopersHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	defer developerRows.Close()
 
-	js, err := dbconfig.ParseRowsToJSON(developerRows)
+	devList, err := dbconfig.ParseRowsToArray(developerRows)
 	if err!=nil {
 		NewJSONError(err.Error(), 502, w)
 		return
@@ -92,12 +92,19 @@ func viewDevelopersHandler(w http.ResponseWriter, r *http.Request) {
 	tmplArgs := make(map[string]interface{})
 	tmplArgs["Pid"] = pid
 	tmplArgs["Pname"] = pname
-	tmplArgs["List"] = string(js)
-	err = devTmpl.Execute(w, tmplArgs)
+	tmplArgs["List"] = devList
+	js, err := json.Marshal(tmplArgs)
 	if err!=nil {
 		NewJSONError(err.Error(), 502, w)
 		return
 	}
+
+	err = WriteJSON(js, w)
+	if err!=nil {
+		NewJSONError(err.Error(), 502, w)
+		return
+	}
+
 
 }
 

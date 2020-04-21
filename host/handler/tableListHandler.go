@@ -5,7 +5,6 @@ import (
 	"autodb/host/globalsession"
 	"encoding/json"
 	"errors"
-	"html/template"
 	"net/http"
 	"regexp"
 	"strconv"
@@ -14,10 +13,10 @@ import (
 
 type TableListHandler struct {}
 
-var tableListTmpl *template.Template
+//var tableListTmpl *template.Template
 
 func (*TableListHandler) Init() {
-	tableListTmpl, _ = template.ParseFiles("../view/tables.html")
+	//tableListTmpl, _ = template.ParseFiles("../view/tables.html")
 	http.HandleFunc("/project", viewTableListHandler)
 	http.HandleFunc("/addTable/", addTableHandler)
 	http.HandleFunc("/deleteTable", deleteTableHandler)
@@ -79,7 +78,7 @@ func viewTableListHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	defer tableRows.Close()
 
-	js, err := dbconfig.ParseRowsToJSON(tableRows)
+	rowsArray, err := dbconfig.ParseRowsToArray(tableRows)
 	if err!=nil {
 		NewJSONError(err.Error(), 502, w)
 		return
@@ -88,8 +87,14 @@ func viewTableListHandler(w http.ResponseWriter, r *http.Request) {
 	tmplArgs := make(map[string]interface{})
 	tmplArgs["Pid"] = pid
 	tmplArgs["Pname"] = pname
-	tmplArgs["List"] = string(js)
-	err = tableListTmpl.Execute(w, tmplArgs)
+	tmplArgs["List"] = rowsArray
+	js, err := json.Marshal(tmplArgs)
+	if err!=nil {
+		NewJSONError(err.Error(), 502, w)
+		return
+	}
+
+	err = WriteJSON(js, w)
 	if err!=nil {
 		NewJSONError(err.Error(), 502, w)
 		return

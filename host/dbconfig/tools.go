@@ -248,12 +248,27 @@ func interpretColumnType(colType *sql.ColumnType , v interface{}) interface{} {
 }
 
 func ParseRowsToJSON (rows *sql.Rows) ([]byte, error) { //need test for all types including null
-	result := make([][]interface{}, 0, 50)
-	cols, err:=rows.Columns()
-	if err!=nil {
+	result, err := ParseRowsToArray(rows)
+	if err != nil {
 		return nil, err
 	}
-	colTypes, err:= rows.ColumnTypes()
+
+	resultMap := make(map[string][][]interface{})
+	resultMap["result"] = result
+	resultJSON, err := json.Marshal(resultMap)
+	if err != nil {
+		panic(err)
+	}
+	return resultJSON, nil
+}
+
+func ParseRowsToArray(rows *sql.Rows) ([][]interface{}, error) {
+	result := make([][]interface{}, 0, 50)
+	cols, err := rows.Columns()
+	if err != nil {
+		return nil, err
+	}
+	colTypes, err := rows.ColumnTypes()
 
 	result = append(result, make([]interface{}, len(cols)))
 	l := len(result) - 1
@@ -262,15 +277,15 @@ func ParseRowsToJSON (rows *sql.Rows) ([]byte, error) { //need test for all type
 	}
 
 	rowResult := make([]*interface{}, len(cols))
-	interfaceResult := make ([]interface{}, len(cols))
+	interfaceResult := make([]interface{}, len(cols))
 	for i := range rowResult {
-		rowResult[i]=new(interface{})
-		interfaceResult[i]=rowResult[i]
+		rowResult[i] = new(interface{})
+		interfaceResult[i] = rowResult[i]
 	}
 
 	for rows.Next() {
-		err:=rows.Scan(interfaceResult...)
-		if err!=nil {
+		err := rows.Scan(interfaceResult...)
+		if err != nil {
 			return nil, err
 		}
 		result = append(result, make([]interface{}, len(cols)))
@@ -279,12 +294,5 @@ func ParseRowsToJSON (rows *sql.Rows) ([]byte, error) { //need test for all type
 			result[l][i] = interpretColumnType(colTypes[i], *rowResult[i])
 		}
 	}
-
-	resultMap:=make(map[string][][]interface{})
-	resultMap["result"] = result
-	resultJSON, err := json.Marshal(resultMap)
-	if err!=nil {
-		panic(err)
-	}
-	return resultJSON, nil
+	return result, nil
 }

@@ -4,8 +4,8 @@ import (
 	"autodb/host/dbconfig"
 	"crypto/rand"
 	"crypto/sha256"
+	"encoding/json"
 	"fmt"
-	"html/template"
 	"net/http"
 	"strconv"
 	"strings"
@@ -13,10 +13,10 @@ import (
 
 type ApiViewHandler struct{}
 
-var apiTmpl *template.Template
+//var apiTmpl *template.Template
 
 func (*ApiViewHandler) Init() {
-	apiTmpl, _ = template.ParseFiles("../view/apis.html")
+	//apiTmpl, _ = template.ParseFiles("../view/apis.html")
 	http.HandleFunc("/apis", viewApiHandler)
 	http.HandleFunc("/addApi", addApiHandler)
 	http.HandleFunc("/modifyApi", modifyApiHandler)
@@ -49,7 +49,7 @@ func viewApiHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	defer apisRows.Close()
 
-	js, err := dbconfig.ParseRowsToJSON(apisRows)
+	apiList, err := dbconfig.ParseRowsToArray(apisRows)
 	if err!=nil {
 		NewJSONError(err.Error(), 502, w)
 		return
@@ -58,10 +58,16 @@ func viewApiHandler(w http.ResponseWriter, r *http.Request) {
 	viewData := map[string]interface{} {
 		"Tid":tid,
 		"Tname": tInfo.Tname,
-		"ApiList": string(js),
+		"ApiList": apiList,
 	}
 
-	err = apiTmpl.Execute(w, viewData)
+	js, err := json.Marshal(viewData)
+	if err!=nil {
+		NewJSONError(err.Error(), 502, w)
+		return
+	}
+
+	err = WriteJSON(js, w)
 	if err!=nil {
 		NewJSONError(err.Error(), 502, w)
 		return

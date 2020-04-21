@@ -4,17 +4,16 @@ import (
 	"autodb/host/dbconfig"
 	"autodb/host/globalsession"
 	"fmt"
-	"html/template"
 	"net/http"
 	"strconv"
 )
 
 type ProjectListHandler struct{}
 
-var projectsTmpl *template.Template
+//var projectsTmpl *template.Template
 
 func (*ProjectListHandler) Init() {
-	projectsTmpl, _ = template.ParseFiles("../view/projects.html")
+	//projectsTmpl, _ = template.ParseFiles("../view/projects.html")
 	http.HandleFunc("/projects", projectListHandler)
 	http.HandleFunc("/createProject", createProjectHandler)
 	http.HandleFunc("/deleteProject", deleteProjectHandler)
@@ -50,12 +49,11 @@ func projectListHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = projectsTmpl.Execute(w, string(js))
+	err = WriteJSON(js, w)
 	if err!=nil {
 		NewJSONError(err.Error(), 502, w)
 		return
 	}
-
 }
 
 //insert a info row into autodb.projects.

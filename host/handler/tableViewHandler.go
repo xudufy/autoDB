@@ -3,8 +3,8 @@ package handler
 import (
 	"autodb/host/dbconfig"
 	"autodb/host/globalsession"
+	"encoding/json"
 	"fmt"
-	"html/template"
 	"net/http"
 	"strconv"
 	"strings"
@@ -12,10 +12,10 @@ import (
 
 type TableViewHandler struct{}
 
-var tTmpl *template.Template
+//var tTmpl *template.Template
 
 func (*TableViewHandler) Init() {
-	tTmpl, _ = template.ParseFiles("../view/table.html")
+	//tTmpl, _ = template.ParseFiles("../view/table.html")
 	http.HandleFunc("/table", viewTableHandler)
 	http.HandleFunc("/runScript", runSQLHandler)
 	http.HandleFunc("/addColumn", addColumnHandler)
@@ -28,9 +28,9 @@ type tableInfo struct {
 	Pname string
 	Tid int
 	Tname string
-	DataList string
-	ColumnList string
-	IndexList string
+	DataList interface{}
+	ColumnList interface{}
+	IndexList interface{}
 }
 
 //find pid pname tid tname use a given tid, and do user authentication.
@@ -103,12 +103,12 @@ func viewTableHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	defer ColDataRows.Close()
 
-	js, err := dbconfig.ParseRowsToJSON(ColDataRows)
+	colList, err := dbconfig.ParseRowsToArray(ColDataRows)
 	if err!=nil {
 		NewJSONError(err.Error(), 502, w)
 		return
 	}
-	tInfo.ColumnList = string(js)
+	tInfo.ColumnList = colList
 
 	sampleDataRows, err := dbInternal.Query(`select * from ` + tInfo.Tname + ` LIMIT 20;`)
 	if err!=nil {
@@ -117,12 +117,12 @@ func viewTableHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	defer sampleDataRows.Close()
 
-	jsD, err := dbconfig.ParseRowsToJSON(sampleDataRows)
+	listD, err := dbconfig.ParseRowsToArray(sampleDataRows)
 	if err!=nil {
 		NewJSONError(err.Error(), 502, w)
 		return
 	}
-	tInfo.DataList = string(jsD)
+	tInfo.DataList = listD
 
 	indexRows, err := dbInternal.Query(`show indexes from ` + tInfo.Tname + ` ;`)
 	if err!=nil {
@@ -131,14 +131,20 @@ func viewTableHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	defer indexRows.Close()
 
-	jsI, err := dbconfig.ParseRowsToJSON(indexRows)
+	listI, err := dbconfig.ParseRowsToArray(indexRows)
 	if err!=nil {
 		NewJSONError(err.Error(), 502, w)
 		return
 	}
-	tInfo.IndexList = string(jsI)
+	tInfo.IndexList = listI
 
-	err = tTmpl.Execute(w, tInfo)
+	js, err := json.Marshal(tInfo)
+	if err!=nil {
+		NewJSONError(err.Error(), 502, w)
+		return
+	}
+
+	err = WriteJSON(js, w)
 	if err!=nil {
 		NewJSONError(err.Error(), 502, w)
 		return
