@@ -5,7 +5,6 @@ import (
 	"autodb/host/globalsession"
 	"crypto/sha256"
 	"fmt"
-	"html/template"
 	"net/http"
 	"regexp"
 )
@@ -13,15 +12,15 @@ import (
 type UserAPIHandler struct{}
 
 var (
-	loginTmpl *template.Template
-	logoutTmpl *template.Template
-	registerTmpl *template.Template
+	//loginTmpl *template.Template
+	//logoutTmpl *template.Template
+	//registerTmpl *template.Template
 )
 
 func (*UserAPIHandler) Init() {
-	loginTmpl, _ = template.ParseFiles("../view/login.html")
-	logoutTmpl, _ = template.ParseFiles("../view/logout.html")
-	registerTmpl, _ = template.ParseFiles("../view/register.html")
+	//loginTmpl, _ = template.ParseFiles("../view/login.html")
+	//logoutTmpl, _ = template.ParseFiles("../view/logout.html")
+	//registerTmpl, _ = template.ParseFiles("../view/register.html")
 	http.HandleFunc("/register", registerHandler)
 	http.HandleFunc("/login", loginHandler)
 	http.HandleFunc("/logout", logoutHandler)
@@ -35,7 +34,7 @@ func passwordEncode(pw string, username string) string {
 
 func registerHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "GET" {
-		_ = registerTmpl.Execute(w, "")
+		//_ = registerTmpl.Execute(w, "")
 	} else if r.Method == "POST" {
 
 		_ = r.ParseForm()
@@ -83,7 +82,7 @@ func registerHandler(w http.ResponseWriter, r *http.Request) {
 
 func loginHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method=="GET" {
-		_ = loginTmpl.Execute(w, "")
+		//_ = loginTmpl.Execute(w, "")
 	} else if r.Method=="POST" {
 		_ = r.ParseForm()
 		em:= r.FormValue("email")
@@ -131,7 +130,7 @@ func loginHandler(w http.ResponseWriter, r *http.Request) {
 func logoutHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "GET" {
 		globalsession.GSess.SessionDestroy(w, r)
-		_ = logoutTmpl.Execute(w, "")
+		//_ = logoutTmpl.Execute(w, "")
 	} else {
 		http.NotFound(w, r)
 	}
