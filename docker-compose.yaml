@@ -1,0 +1,30 @@
+
+version: '3'
+
+services:
+  mysql:
+    build: 
+      context: ./database/
+      dockerfile: Dockerfile
+    environment:
+      MYSQL_ROOT_PASSWORD: autodb_cs542_final
+      MYSQL_DATABASE: autodb
+      MYSQL_USER: autodb
+      MYSQL_PASSWORD: S20-CS542
+    restart: always
+    ports:
+      - "3308:3306"
+    volumes:
+    - sqldata:/var/lib/mysql
+  server:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    depends_on:
+    - "mysql"
+    ports:
+    - 23456:23456
+
+volumes:
+  sqldata:

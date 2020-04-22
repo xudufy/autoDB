@@ -32,9 +32,9 @@ insert into nullTest (id, time, nullstring) values (2147483649, '2020-03-28 08:0
 insert into nullTest (id, time) values (1, '2020-03-29 08:00:00');
 
 -- for dbconfig/user_test
-drop database if exists developer_project_example1
-create database developer_project_example1;
-use developer_project_example1;
-create table ssss(
-    asdf int primary key
-)
+-- drop database if exists developer_project_example1
+-- create database developer_project_example1;
+-- use developer_project_example1;
+-- create table ssss(
+--     asdf int primary key
+-- )

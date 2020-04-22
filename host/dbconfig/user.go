@@ -100,8 +100,8 @@ func AddProjectUser(pid int, schemaName string) error {
 		return err
 	}
 
-	internalUser := `'`+ strconv.Itoa(pid) + `_internal'@'localhost'`
-	publicUser := `'`+ strconv.Itoa(pid) + `_public'@'localhost'`
+	internalUser := `'`+ strconv.Itoa(pid) + `_internal'@'%'`
+	publicUser := `'`+ strconv.Itoa(pid) + `_public'@'%'`
 
 	var queries strings.Builder
 	queries.WriteString(`DROP USER IF EXISTS `+ internalUser +`, `+ publicUser + `; ` + "\n")
@@ -129,8 +129,8 @@ func DeleteProjectUser(pid int, schemaName string) error {
 		return err
 	}
 
-	internalUser := `'`+ strconv.Itoa(pid) + `_internal'@'localhost'`
-	publicUser := `'`+ strconv.Itoa(pid) + `_public'@'localhost'`
+	internalUser := `'`+ strconv.Itoa(pid) + `_internal'@'%'`
+	publicUser := `'`+ strconv.Itoa(pid) + `_public'@'%'`
 
 	var queries strings.Builder
 	queries.WriteString(`DROP USER IF EXISTS `+ internalUser +`, `+ publicUser + `; ` + "\n")
