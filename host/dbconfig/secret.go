@@ -4,7 +4,7 @@ import "database/sql"
 
 const (
 	DBRoot = "@tcp(mysql:3306)/"
-	DBACredential = "autodb:S20-CS542"
+	DBACredential = "root:autodb_cs542_final"
 	DBRootURL = DBACredential + DBRoot + "?multiStatements=true"
 	DBHostURL = DBACredential + DBRoot + "autodb?multiStatements=true"
 )
