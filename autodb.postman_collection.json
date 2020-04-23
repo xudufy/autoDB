@@ -83,6 +83,45 @@
 			"response": []
 		},
 		{
+			"name": "register2",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "username",
+							"value": "test2",
+							"type": "text"
+						},
+						{
+							"key": "email",
+							"value": "test2@test1.com",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "test2pw",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:23456/register",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "23456",
+					"path": [
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "logout",
 			"request": {
 				"method": "GET",
@@ -159,7 +198,7 @@
 					"urlencoded": [
 						{
 							"key": "pid",
-							"value": "8",
+							"value": "2",
 							"type": "text"
 						}
 					]
@@ -184,7 +223,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:23456/project?pid=9",
+					"raw": "http://localhost:23456/project?pid=3",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -196,7 +235,7 @@
 					"query": [
 						{
 							"key": "pid",
-							"value": "9"
+							"value": "3"
 						}
 					]
 				}
@@ -218,7 +257,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:23456/addTable/9",
+					"raw": "http://localhost:23456/addTable/3",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -226,7 +265,7 @@
 					"port": "23456",
 					"path": [
 						"addTable",
-						"9"
+						"3"
 					]
 				}
 			},
@@ -242,7 +281,7 @@
 					"urlencoded": [
 						{
 							"key": "tid",
-							"value": "2",
+							"value": "3",
 							"type": "text"
 						}
 					]
@@ -267,7 +306,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:23456/developers?pid=9",
+					"raw": "http://localhost:23456/developers?pid=3",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -279,7 +318,7 @@
 					"query": [
 						{
 							"key": "pid",
-							"value": "9"
+							"value": "3"
 						}
 					]
 				}
@@ -292,7 +331,631 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": ""
+					"raw": "http://localhost:23456/searchUser?w=Tes",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "23456",
+					"path": [
+						"searchUser"
+					],
+					"query": [
+						{
+							"key": "w",
+							"value": "Tes"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "addDeveloper",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "uid",
+							"value": "3",
+							"type": "text"
+						},
+						{
+							"key": "pid",
+							"value": "3",
+							"type": "text"
+						},
+						{
+							"key": "privilege",
+							"value": "developer",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:23456/addDeveloper",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "23456",
+					"path": [
+						"addDeveloper"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "deleteDeveloper",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "uid",
+							"value": "3",
+							"type": "text"
+						},
+						{
+							"key": "pid",
+							"value": "3",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:23456/deleteDeveloper",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "23456",
+					"path": [
+						"deleteDeveloper"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "setDeveloperGroup",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "uid",
+							"value": "3",
+							"type": "text"
+						},
+						{
+							"key": "pid",
+							"value": "3",
+							"type": "text"
+						},
+						{
+							"key": "privilege",
+							"value": "owner",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:23456/setDeveloperGroup",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "23456",
+					"path": [
+						"setDeveloperGroup"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "table",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:23456/table?tid=4",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "23456",
+					"path": [
+						"table"
+					],
+					"query": [
+						{
+							"key": "tid",
+							"value": "4"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "runScript",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "tid",
+							"value": "4",
+							"type": "text"
+						},
+						{
+							"key": "script",
+							"value": "insert into test1t1 values ();",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:23456/runScript",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "23456",
+					"path": [
+						"runScript"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "runScript2",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "tid",
+							"value": "4",
+							"type": "text"
+						},
+						{
+							"key": "script",
+							"value": "select * from test1t1",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:23456/runScript",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "23456",
+					"path": [
+						"runScript"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "runScriptScr",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "tid",
+							"value": "4",
+							"type": "text"
+						},
+						{
+							"key": "script",
+							"value": "create table aa (id int primary key)",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:23456/runScript",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "23456",
+					"path": [
+						"runScript"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "addColumn",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "tid",
+							"value": "4",
+							"type": "text"
+						},
+						{
+							"key": "name",
+							"value": "grade",
+							"type": "text"
+						},
+						{
+							"key": "type",
+							"value": "ENUM('a', 'b')",
+							"type": "text"
+						},
+						{
+							"key": "options",
+							"value": "default \"a\"",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:23456/addColumn",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "23456",
+					"path": [
+						"addColumn"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "deleteColumn",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "tid",
+							"value": "4",
+							"type": "text"
+						},
+						{
+							"key": "name",
+							"value": "grade",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:23456/deleteColumn",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "23456",
+					"path": [
+						"deleteColumn"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "addIndex",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "tid",
+							"value": "4",
+							"type": "text"
+						},
+						{
+							"key": "name",
+							"value": "cusI",
+							"type": "text"
+						},
+						{
+							"key": "columnList",
+							"value": "id,time",
+							"type": "text"
+						},
+						{
+							"key": "unique",
+							"value": "true",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:23456/addIndex",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "23456",
+					"path": [
+						"addIndex"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "apis",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:23456/apis?tid=4",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "23456",
+					"path": [
+						"apis"
+					],
+					"query": [
+						{
+							"key": "tid",
+							"value": "4"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "addApi",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "tid",
+							"value": "4",
+							"type": "text"
+						},
+						{
+							"key": "name",
+							"value": "get_cuid",
+							"type": "text"
+						},
+						{
+							"key": "script",
+							"value": "select :currentUserID;",
+							"type": "text"
+						},
+						{
+							"key": "type",
+							"value": "public",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:23456/addApi",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "23456",
+					"path": [
+						"addApi"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "addApi2",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "tid",
+							"value": "4",
+							"type": "text"
+						},
+						{
+							"key": "name",
+							"value": "get_full_table",
+							"type": "text"
+						},
+						{
+							"key": "script",
+							"value": "select * from test1t1 where id<=:id;",
+							"type": "text"
+						},
+						{
+							"key": "type",
+							"value": "public",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:23456/addApi",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "23456",
+					"path": [
+						"addApi"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "genericApi",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"id\":2}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:23456/api/b4f1879856daf7a9bfb5a08357d49269bc1d6e0025fac3faa231fcb62e01c3dd",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "23456",
+					"path": [
+						"api",
+						"b4f1879856daf7a9bfb5a08357d49269bc1d6e0025fac3faa231fcb62e01c3dd"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "genericApi",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"id\":3}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:23456/api/8fac0c62b13d637f04c77b6dce612c6bafa80b5a030b100e55264d6d517261b4",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "23456",
+					"path": [
+						"api",
+						"8fac0c62b13d637f04c77b6dce612c6bafa80b5a030b100e55264d6d517261b4"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "modifyApi",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "tid",
+							"value": "4",
+							"type": "text"
+						},
+						{
+							"key": "name",
+							"value": "get_cuid",
+							"type": "text"
+						},
+						{
+							"key": "script",
+							"value": "select * from test1t1 where id=:currentUserID",
+							"type": "text"
+						},
+						{
+							"key": "type",
+							"value": "user",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:23456/modifyApi",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "23456",
+					"path": [
+						"modifyApi"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "deleteApi",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "tid",
+							"value": "4",
+							"type": "text"
+						},
+						{
+							"key": "name",
+							"value": "get_full_table",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:23456/deleteApi",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "23456",
+					"path": [
+						"deleteApi"
+					]
 				}
 			},
 			"response": []
