@@ -25,7 +25,6 @@ func (*DeveloperListHandler) Init() {
 	http.HandleFunc("/searchUser", searchUserHandler)
 }
 
-//TODO: test
 func viewDevelopersHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method!="GET" {
 		http.NotFound(w, r)
@@ -76,7 +75,7 @@ func viewDevelopersHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	developerRows, err := dbconfig.HostDB.Query(`select U.uid, username, email, privilege 
-			from (select uid, privilege from project_developer where pid=?) PD inner join users U on U.uid = PD.uid`, pid)
+			from (select uid, privilege from project_developer where pid=? and privilege<>'deleted') PD inner join users U on U.uid = PD.uid`, pid)
 	if err!=nil {
 		NewJSONError(err.Error(), 502, w)
 		return
@@ -108,7 +107,6 @@ func viewDevelopersHandler(w http.ResponseWriter, r *http.Request) {
 
 }
 
-//TODO:test
 func addDeveloperHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method!="POST" {
 		http.NotFound(w, r)
@@ -161,9 +159,13 @@ func addDeveloperHandler(w http.ResponseWriter, r *http.Request) {
 	_, err = dbconfig.HostDB.Exec(`insert into project_developer (uid, pid, privilege) VALUES (?,?,?)`, newUid, pid, privilege)
 	if err != nil {
 		fmt.Println(err)
-		_, err = dbconfig.HostDB.Exec(`update project_developer set privilege=? where pid=? and uid=? and privilege='deleted';`, privilege, pid, newUid)
-		if err!=nil {
-			NewJSONError("insert error, maybe the user has been added or pid, uid are not valid", 502, w)
+		ret, err := dbconfig.HostDB.Exec(`update project_developer set privilege=? where pid=? and uid=? and privilege='deleted';`, privilege, pid, newUid)
+		if  err!=nil {
+			NewJSONError("insert error, maybe the user has been added or pid, uid are not valid", 400, w)
+			return
+		}
+		if n, _ := ret.RowsAffected(); n==0 {
+			NewJSONError("insert error, maybe the user has been added or pid, uid are not valid", 400, w)
 			return
 		}
 	}
@@ -241,7 +243,6 @@ func searchUserHandler(w http.ResponseWriter, r *http.Request) {
 
 }
 
-//TODO:test
 func deleteDeveloperHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method!="POST" {
 		http.NotFound(w, r)
@@ -280,16 +281,19 @@ func deleteDeveloperHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	_, err = dbconfig.HostDB.Exec(`update project_developer set privilege='deleted' where pid=? and uid=? and privilege<>'deleted';`, pid, newUid)
+	ret, err := dbconfig.HostDB.Exec(`update project_developer set privilege='deleted' where pid=? and uid=? and privilege<>'deleted';`, pid, newUid)
 	if err!=nil {
-		NewJSONError("pid, uid not found", 400, w)
+		NewJSONError("pid, uid not found", 502, w)
 		fmt.Println(err.Error())
+		return
+	}
+	if n, _ := ret.RowsAffected(); n==0 {
+		NewJSONError("pid, uid not found", 400, w)
 		return
 	}
 
 }
 
-//TODO: test
 func setDeveloperGroupHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method!="POST" {
 		http.NotFound(w, r)
@@ -334,9 +338,13 @@ func setDeveloperGroupHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	_, err = dbconfig.HostDB.Exec(`update project_developer set privilege=? where uid = ? and pid = ? and privilege<>'deleted';`, newUid, pid, privilege)
+	ret, err := dbconfig.HostDB.Exec(`update project_developer set privilege=? where uid = ? and pid = ? and privilege<>'deleted';`, privilege, newUid, pid)
 	if err != nil {
 		NewJSONError(err.Error(), 502, w)
+		return
+	}
+	if n, _ := ret.RowsAffected(); n==0 {
+		NewJSONError("uid or pid invalid, or the privilege is unchanged.", 400, w)
 		return
 	}
 

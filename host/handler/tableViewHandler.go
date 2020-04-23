@@ -37,7 +37,7 @@ type tableInfo struct {
 //return nil indicate error, and error is handled inside.
 func getTableInfo(tid int, w http.ResponseWriter, r *http.Request) *tableInfo {
 	var err error
-	r1, err := dbconfig.HostDB.Query(`select pid, pname, tid, name from (select pid, tid, name from tables where tid = ?) A inner join projects P on A.pid = P.pid`, tid)
+	r1, err := dbconfig.HostDB.Query(`select P.pid, pname, tid, name from (select pid, tid, name from tables where tid = ?) A inner join projects P on A.pid = P.pid`, tid)
 	if err!=nil {
 		NewJSONError(err.Error(), 502, w)
 		return nil
@@ -192,7 +192,6 @@ func runSQLHandler(w http.ResponseWriter, r *http.Request) {
 
 	resultRows, err := pubTx.Query(script)
 	if err!=nil {
-		NewJSONError(err.Error(), 400, w)
 		return
 	}
 	defer resultRows.Close()
@@ -348,7 +347,7 @@ func addIndexHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	query := `create ` + uniqueSign + ` index ` + indexName + ` on ` + tInfo.Tname + ` (` + columnList + ` );`
+	query := `create ` + uniqueSign + ` index ` + indexName + ` on ` + tInfo.Tname + ` ( ` + columnList + ` );`
 	fmt.Println(query)
 	_, err = dbInternal.Exec(query)
 	if err!=nil {

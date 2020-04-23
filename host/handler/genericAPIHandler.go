@@ -20,7 +20,7 @@ func (*GenericAPIHandler) Init() {
 
 func filterTypePrefixInForm(inputForm map[string]interface{}) error {
 	for k := range inputForm {
-		if k[:5] == "time_" {
+		if len(k)>=5 && k[:5] == "time_" {
 			_, ok := inputForm[k].(string)
 			if !ok {
 				return errors.New(k+" is not a RFC3339 time")
@@ -36,9 +36,15 @@ func filterTypePrefixInForm(inputForm map[string]interface{}) error {
 }
 
 func readJSONFormInBody(w http.ResponseWriter, r *http.Request) (map[string]interface{}, error) {
+	if r.Method=="GET" {
+		return make(map[string]interface{}), nil
+	}
 	bodyInBytes := make([]byte, r.ContentLength*2) //make sure we can read the entire body.
 	ret, err := r.Body.Read(bodyInBytes)
-	bodyInBytes = bodyInBytes[:ret+1]
+	bodyInBytes = bodyInBytes[:ret]
+	if ret == 0 {
+		return make(map[string]interface{}), nil
+	}
 	if err!=io.EOF {
 		if err==nil {
 			test := make([]byte, 1)
@@ -61,9 +67,8 @@ func readJSONFormInBody(w http.ResponseWriter, r *http.Request) (map[string]inte
 	return inputForm, nil
 }
 
-//TODO: test
 func apiHandler(w http.ResponseWriter, r *http.Request) {
-	if r.Method!="POST" {
+	if r.Method!="POST" && r.Method!="GET" {
 		http.NotFound(w, r)
 		return
 	}
