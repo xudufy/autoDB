@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>User Login</title>
+  <meta charset="UTF-8">
+  <meta lang="en-US">
+  <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.4.1.min.js"></script>
+  <script src="http://malsup.github.io/min/jquery.form.min.js"></script>
+</head>
+<body>
+  <form id="loginForm" target="_blank">
+    <label for="email">Email:</label><br>
+    <input type="text" name="email" id="email"/><br>
+    <label for="password">Password:</label><br>
+    <input type="password" name="password" id="password"/><br>
+    <input type="submit" value="Submit">
+  </form>
+  <br>
+  <script>
+    $("#loginForm").submit(
+      function(event) {
+        event.preventDefault();
+        $.ajax(
+          {
+            url:"http://104.197.149.133/login",
+            method:"POST",
+            data:$("#loginForm").serialize(),
+            xhrFields:{
+              withCredentials:true
+            },
+            success: function() {
+              var urlParams = new URLSearchParams(window.location.search);
+              var redirectTo = urlParams.get("redirect");
+              if (!redirectTo){
+                $("body").html("Login Success!");
+              } else {
+                window.location.href = redirectTo;
+              }
+            },
+            error: function(xhr, status, errorThrown) {
+             $("#errorMsg").html(JSON.parse(xhr.responseText).err);
+            }
+          }
+        )
+      }
+    );
+  </script>
+  <span id="errorMsg" style="font-size: 12; color: red;"></span>
+</body>
+</html>
