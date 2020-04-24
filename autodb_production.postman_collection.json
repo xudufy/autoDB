@@ -1,0 +1,1052 @@
+{
+	"info": {
+		"_postman_id": "d0f0b9c9-bbc8-487d-a39b-59a8e5b3df28",
+		"name": "autodb_production",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "login",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "email",
+							"value": "test1@test1.com",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "test1pw",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://104.197.149.133:80/login",
+					"protocol": "http",
+					"host": [
+						"104",
+						"197",
+						"149",
+						"133"
+					],
+					"port": "80",
+					"path": [
+						"login"
+					]
+				},
+				"description": "login"
+			},
+			"response": []
+		},
+		{
+			"name": "register",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "username",
+							"value": "test1",
+							"type": "text"
+						},
+						{
+							"key": "email",
+							"value": "test1@test1.com",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "test1pw",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://104.197.149.133:80/register",
+					"protocol": "http",
+					"host": [
+						"104",
+						"197",
+						"149",
+						"133"
+					],
+					"port": "80",
+					"path": [
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "register2",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "username",
+							"value": "test2",
+							"type": "text"
+						},
+						{
+							"key": "email",
+							"value": "test2@test1.com",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "test2pw",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://104.197.149.133:80/register",
+					"protocol": "http",
+					"host": [
+						"104",
+						"197",
+						"149",
+						"133"
+					],
+					"port": "80",
+					"path": [
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "logout",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://104.197.149.133:80/logout",
+					"protocol": "http",
+					"host": [
+						"104",
+						"197",
+						"149",
+						"133"
+					],
+					"port": "80",
+					"path": [
+						"logout"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "projectList",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://104.197.149.133:80/projects",
+					"protocol": "http",
+					"host": [
+						"104",
+						"197",
+						"149",
+						"133"
+					],
+					"port": "80",
+					"path": [
+						"projects"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "createProject",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "name",
+							"value": "test1P1",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://104.197.149.133:80/createProject",
+					"protocol": "http",
+					"host": [
+						"104",
+						"197",
+						"149",
+						"133"
+					],
+					"port": "80",
+					"path": [
+						"createProject"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "deleteProject",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "pid",
+							"value": "2",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://104.197.149.133:80/deleteProject",
+					"protocol": "http",
+					"host": [
+						"104",
+						"197",
+						"149",
+						"133"
+					],
+					"port": "80",
+					"path": [
+						"deleteProject"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "tableList",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://104.197.149.133:80/project?pid=3",
+					"protocol": "http",
+					"host": [
+						"104",
+						"197",
+						"149",
+						"133"
+					],
+					"port": "80",
+					"path": [
+						"project"
+					],
+					"query": [
+						{
+							"key": "pid",
+							"value": "3"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "addTable",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\t\t\"name\": \"test1t1\",\r\n\t\t\"columns\": [\r\n\t\t\t{\r\n\t\t\t\t\"name\":\"id\",\r\n\t\t\t\t\"type\": \"INT\",\r\n\t\t\t\t\"options\":\"PRIMARY KEY auto_increment\"\r\n\t\t\t},{\r\n\t\t\t\t\"name\":\"time\",\r\n\t\t\t\t\"type\": \"DATETIME\",\r\n\t\t\t\t\"options\":\"DEFAULT CURRENT_TIMESTAMP\"\r\n\t\t\t}\r\n\t\t],\r\n\t\t\"options\":\"UNIQUE(id, time), INDEX(time)\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://104.197.149.133:80/addTable/3",
+					"protocol": "http",
+					"host": [
+						"104",
+						"197",
+						"149",
+						"133"
+					],
+					"port": "80",
+					"path": [
+						"addTable",
+						"3"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "deleteTable",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "tid",
+							"value": "3",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://104.197.149.133:80/deleteTable",
+					"protocol": "http",
+					"host": [
+						"104",
+						"197",
+						"149",
+						"133"
+					],
+					"port": "80",
+					"path": [
+						"deleteTable"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "developerList",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://104.197.149.133:80/developers?pid=3",
+					"protocol": "http",
+					"host": [
+						"104",
+						"197",
+						"149",
+						"133"
+					],
+					"port": "80",
+					"path": [
+						"developers"
+					],
+					"query": [
+						{
+							"key": "pid",
+							"value": "3"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "searchUser",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://104.197.149.133:80/searchUser?w=Tes",
+					"protocol": "http",
+					"host": [
+						"104",
+						"197",
+						"149",
+						"133"
+					],
+					"port": "80",
+					"path": [
+						"searchUser"
+					],
+					"query": [
+						{
+							"key": "w",
+							"value": "Tes"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "addDeveloper",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "uid",
+							"value": "4",
+							"type": "text"
+						},
+						{
+							"key": "pid",
+							"value": "3",
+							"type": "text"
+						},
+						{
+							"key": "privilege",
+							"value": "developer",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://104.197.149.133:80/addDeveloper",
+					"protocol": "http",
+					"host": [
+						"104",
+						"197",
+						"149",
+						"133"
+					],
+					"port": "80",
+					"path": [
+						"addDeveloper"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "deleteDeveloper",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "uid",
+							"value": "3",
+							"type": "text"
+						},
+						{
+							"key": "pid",
+							"value": "3",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://104.197.149.133:80/deleteDeveloper",
+					"protocol": "http",
+					"host": [
+						"104",
+						"197",
+						"149",
+						"133"
+					],
+					"port": "80",
+					"path": [
+						"deleteDeveloper"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "setDeveloperGroup",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "uid",
+							"value": "3",
+							"type": "text"
+						},
+						{
+							"key": "pid",
+							"value": "3",
+							"type": "text"
+						},
+						{
+							"key": "privilege",
+							"value": "owner",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://104.197.149.133:80/setDeveloperGroup",
+					"protocol": "http",
+					"host": [
+						"104",
+						"197",
+						"149",
+						"133"
+					],
+					"port": "80",
+					"path": [
+						"setDeveloperGroup"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "table",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://104.197.149.133:80/table?tid=4",
+					"protocol": "http",
+					"host": [
+						"104",
+						"197",
+						"149",
+						"133"
+					],
+					"port": "80",
+					"path": [
+						"table"
+					],
+					"query": [
+						{
+							"key": "tid",
+							"value": "4"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "runScript",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "tid",
+							"value": "4",
+							"type": "text"
+						},
+						{
+							"key": "script",
+							"value": "insert into test1t1 values ();",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://104.197.149.133:80/runScript",
+					"protocol": "http",
+					"host": [
+						"104",
+						"197",
+						"149",
+						"133"
+					],
+					"port": "80",
+					"path": [
+						"runScript"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "runScript2",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "tid",
+							"value": "4",
+							"type": "text"
+						},
+						{
+							"key": "script",
+							"value": "select * from test1t1",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://104.197.149.133:80/runScript",
+					"protocol": "http",
+					"host": [
+						"104",
+						"197",
+						"149",
+						"133"
+					],
+					"port": "80",
+					"path": [
+						"runScript"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "runScriptScr",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "tid",
+							"value": "4",
+							"type": "text"
+						},
+						{
+							"key": "script",
+							"value": "create table aa (id int primary key)",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://104.197.149.133:80/runScript",
+					"protocol": "http",
+					"host": [
+						"104",
+						"197",
+						"149",
+						"133"
+					],
+					"port": "80",
+					"path": [
+						"runScript"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "addColumn",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "tid",
+							"value": "4",
+							"type": "text"
+						},
+						{
+							"key": "name",
+							"value": "grade",
+							"type": "text"
+						},
+						{
+							"key": "type",
+							"value": "ENUM('a', 'b')",
+							"type": "text"
+						},
+						{
+							"key": "options",
+							"value": "default \"a\"",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://104.197.149.133:80/addColumn",
+					"protocol": "http",
+					"host": [
+						"104",
+						"197",
+						"149",
+						"133"
+					],
+					"port": "80",
+					"path": [
+						"addColumn"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "deleteColumn",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "tid",
+							"value": "4",
+							"type": "text"
+						},
+						{
+							"key": "name",
+							"value": "grade",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://104.197.149.133:80/deleteColumn",
+					"protocol": "http",
+					"host": [
+						"104",
+						"197",
+						"149",
+						"133"
+					],
+					"port": "80",
+					"path": [
+						"deleteColumn"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "addIndex",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "tid",
+							"value": "4",
+							"type": "text"
+						},
+						{
+							"key": "name",
+							"value": "cusI",
+							"type": "text"
+						},
+						{
+							"key": "columnList",
+							"value": "id,time",
+							"type": "text"
+						},
+						{
+							"key": "unique",
+							"value": "true",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://104.197.149.133:80/addIndex",
+					"protocol": "http",
+					"host": [
+						"104",
+						"197",
+						"149",
+						"133"
+					],
+					"port": "80",
+					"path": [
+						"addIndex"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "apis",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://104.197.149.133:80/apis?tid=4",
+					"protocol": "http",
+					"host": [
+						"104",
+						"197",
+						"149",
+						"133"
+					],
+					"port": "80",
+					"path": [
+						"apis"
+					],
+					"query": [
+						{
+							"key": "tid",
+							"value": "4"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "addApi",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "tid",
+							"value": "4",
+							"type": "text"
+						},
+						{
+							"key": "name",
+							"value": "get_cuid",
+							"type": "text"
+						},
+						{
+							"key": "script",
+							"value": "select :currentUserID;",
+							"type": "text"
+						},
+						{
+							"key": "type",
+							"value": "public",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://104.197.149.133:80/addApi",
+					"protocol": "http",
+					"host": [
+						"104",
+						"197",
+						"149",
+						"133"
+					],
+					"port": "80",
+					"path": [
+						"addApi"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "addApi2",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "tid",
+							"value": "4",
+							"type": "text"
+						},
+						{
+							"key": "name",
+							"value": "get_full_table",
+							"type": "text"
+						},
+						{
+							"key": "script",
+							"value": "select * from test1t1 where id<=:id;",
+							"type": "text"
+						},
+						{
+							"key": "type",
+							"value": "public",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://104.197.149.133:80/addApi",
+					"protocol": "http",
+					"host": [
+						"104",
+						"197",
+						"149",
+						"133"
+					],
+					"port": "80",
+					"path": [
+						"addApi"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "genericApi",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"id\":2}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://104.197.149.133:80/api/6f9913a01076b8627b7e200ee641e6a9c667216da6b4aae345f99be3ae1024d8",
+					"protocol": "http",
+					"host": [
+						"104",
+						"197",
+						"149",
+						"133"
+					],
+					"port": "80",
+					"path": [
+						"api",
+						"6f9913a01076b8627b7e200ee641e6a9c667216da6b4aae345f99be3ae1024d8"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "genericApi",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"id\":3}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://104.197.149.133:80/api/01f3692cf6b29310d3734868f654ba4bfafac6b2bec43a37ba9906efe51962ac",
+					"protocol": "http",
+					"host": [
+						"104",
+						"197",
+						"149",
+						"133"
+					],
+					"port": "80",
+					"path": [
+						"api",
+						"01f3692cf6b29310d3734868f654ba4bfafac6b2bec43a37ba9906efe51962ac"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "modifyApi",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "tid",
+							"value": "4",
+							"type": "text"
+						},
+						{
+							"key": "name",
+							"value": "get_cuid",
+							"type": "text"
+						},
+						{
+							"key": "script",
+							"value": "select * from test1t1 where id=:currentUserID",
+							"type": "text"
+						},
+						{
+							"key": "type",
+							"value": "user",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://104.197.149.133:80/modifyApi",
+					"protocol": "http",
+					"host": [
+						"104",
+						"197",
+						"149",
+						"133"
+					],
+					"port": "80",
+					"path": [
+						"modifyApi"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "deleteApi",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "tid",
+							"value": "4",
+							"type": "text"
+						},
+						{
+							"key": "name",
+							"value": "get_full_table",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://104.197.149.133:80/deleteApi",
+					"protocol": "http",
+					"host": [
+						"104",
+						"197",
+						"149",
+						"133"
+					],
+					"port": "80",
+					"path": [
+						"deleteApi"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}
