@@ -103,8 +103,7 @@ func loginHandler(w http.ResponseWriter, r *http.Request) {
 		rows.Next()
 		err = rows.Scan(&realUid, &realUm, &realPw)
 		if err!=nil {
-			fmt.Println(err.Error())
-			http.Error(w, "internal login error", 502)
+			NewJSONError("email and password do not match", 403, w)
 			return
 		}
 		if rows.Next() {

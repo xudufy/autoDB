@@ -5,21 +5,25 @@ import (
 	"errors"
 	"net/http"
 
-	"github.com/astaxie/beego/session"
+	"autodb/host/session"
 )
 
 var GSess *session.Manager
+var CookieName = "__autodb"
+
 
 func Init() {
 	cfg := new(session.ManagerConfig)
 	*cfg = session.ManagerConfig{
-		CookieName:"__autodb",
+		CookieName:CookieName,
 		EnableSetCookie: true,
+		DisableHTTPOnly: false,
 		Gclifetime:3600,
 		Maxlifetime: 3600,
 		Secure: false,
 		CookieLifeTime: 3600,
 		ProviderConfig: "",
+		SameSite: http.SameSiteNoneMode,
 	}
 	GSess, _ = session.NewManager("memory", cfg)
 	go GSess.GC()

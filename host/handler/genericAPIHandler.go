@@ -20,7 +20,7 @@ func (*GenericAPIHandler) Init() {
 
 func filterTypePrefixInForm(inputForm map[string]interface{}) error {
 	for k := range inputForm {
-		if len(k)>=5 && k[:5] == "time_" {
+		if strings.HasPrefix(k, "time_") {
 			_, ok := inputForm[k].(string)
 			if !ok {
 				return errors.New(k+" is not a RFC3339 time")

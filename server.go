@@ -12,6 +12,8 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
+
+
 func main() {
 
 	exePath := os.Args[0]
@@ -23,12 +25,14 @@ func main() {
 
 	handler.InitAllHTTPHandlers()
 
+	crosHandler := handler.CROSWrapper(http.DefaultServeMux)
+
 	sqlTest()
 
 	port := 23456
 	portS := fmt.Sprintf(":%d", port)
 	fmt.Printf("listening on %s\n", portS)
-	err = http.ListenAndServe(portS, nil)
+	err = http.ListenAndServe(portS, crosHandler)
 	if err != nil {
 		fmt.Printf("%v", err)
 	}
