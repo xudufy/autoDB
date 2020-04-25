@@ -5,9 +5,9 @@ import (
 	"autodb/host/globalsession"
 	"encoding/json"
 	"errors"
-	"fmt"
 	"io"
 	"net/http"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -171,25 +171,65 @@ func apiHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	rows, err:= dbGuest.Query(query, args...)
-	if err!=nil {
-		NewJSONError("api execution error", 502, w)
-		fmt.Println("api execution error:" + err.Error())
-		return
-	}
-	defer rows.Close()
+	var js []byte
+	if isSelectQuery(query) {
+		rows, err := dbGuest.Query(query, args...)
+		if err != nil {
+			NewJSONError(err.Error(), 502, w)
+			return
+		}
+		defer rows.Close()
 
-	js, err := dbconfig.ParseRowsToJSON(rows)
-	if err!=nil {
-		NewJSONError(err.Error(), 502, w) //should not happen.
-		return
+		js, err = dbconfig.ParseRowsToJSON(rows)
+		if err != nil {
+			NewJSONError(err.Error(), 502, w) //should not happen.
+			return
+		}
+
+	} else {
+		ret, err := dbGuest.Exec(query, args...)
+		if err != nil {
+			NewJSONError(err.Error(), 502, w)
+			return
+		}
+
+		rowsAffectedStr:=""
+		lastInsertIdStr:=""
+		raInt, err := ret.RowsAffected()
+		if err==nil {
+			rowsAffectedStr = strconv.FormatInt(raInt, 10)
+		}
+		liInt, err := ret.LastInsertId()
+		if err==nil {
+			lastInsertIdStr = strconv.FormatInt(liInt, 10)
+		}
+
+		retJsStruct := map[string]interface{}{
+			"rowsAffected":rowsAffectedStr,
+			"lastInsertId":lastInsertIdStr,
+		}
+
+		js, err = json.Marshal(retJsStruct);
+		if err!=nil {
+			NewJSONError(err.Error(), 502, w)
+			return
+		}
 	}
 
 	err = WriteJSON(js, w)
-
 	if err!=nil {
 		NewJSONError(err.Error(), 502, w) //should not happen.
 		return
 	}
 
+}
+
+func isSelectQuery(query string) bool {
+	q := strings.TrimSpace(query)
+	if len(q)<=7 {
+		return false
+	}
+
+	queryType := strings.ToUpper(query[:6])
+	return strings.HasPrefix(queryType, "SELECT")
 }

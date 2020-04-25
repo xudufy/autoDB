@@ -5,7 +5,6 @@
   <meta charset="UTF-8">
   <meta lang="en-US">
   <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.4.1.min.js"></script>
-  <script src="http://malsup.github.io/min/jquery.form.min.js"></script>
 </head>
 <body>
   <form id="loginForm" target="_blank">
@@ -22,7 +21,7 @@
         event.preventDefault();
         $.ajax(
           {
-            url:"http://104.197.149.133/login",
+            url:"http://localhost:23456/login",
             method:"POST",
             data:$("#loginForm").serialize(),
             xhrFields:{
@@ -37,7 +36,7 @@
                 window.location.href = redirectTo;
               }
             },
-            error: function(xhr, status, errorThrown) {
+            error: function(xhr) {
              $("#errorMsg").html(JSON.parse(xhr.responseText).err);
             }
           }
@@ -45,6 +44,6 @@
       }
     );
   </script>
-  <span id="errorMsg" style="font-size: 12; color: red;"></span>
+  <span id="errorMsg" style="font-size: 12pt; color: #ff0000;"></span>
 </body>
 </html>
