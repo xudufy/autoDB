@@ -36,6 +36,20 @@ const (
 	UserGroupOther
 )
 
+func UserGroupToString(group int) string {
+	switch group {
+	case UserGroupUser:
+		return "user"
+	case UserGroupDeveloper:
+		return "developer"
+	case UserGroupOwner:
+		return "developer"
+	case UserGroupOther:
+		return "other"
+	}
+	return ""
+}
+
 //will return -1, err if not logged in.
 func GetUid(w http.ResponseWriter, r *http.Request) (int, error) {
 	sess, _ := GSess.SessionStart(w, r)

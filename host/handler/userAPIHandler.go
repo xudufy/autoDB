@@ -5,8 +5,10 @@ import (
 	"autodb/host/globalsession"
 	"crypto/sha256"
 	"fmt"
+	"io"
 	"net/http"
 	"regexp"
+	"strings"
 )
 
 type UserAPIHandler struct{}
@@ -24,6 +26,7 @@ func (*UserAPIHandler) Init() {
 	http.HandleFunc("/register", registerHandler)
 	http.HandleFunc("/login", loginHandler)
 	http.HandleFunc("/logout", logoutHandler)
+	http.HandleFunc("/loginStatus", statusHandler)
 }
 
 func passwordEncode(pw string, username string) string {
@@ -133,4 +136,46 @@ func logoutHandler(w http.ResponseWriter, r *http.Request) {
 	} else {
 		http.NotFound(w, r)
 	}
+}
+
+func statusHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method!="GET" {
+		http.NotFound(w, r)
+		return
+	}
+
+	_ = r.ParseForm()
+	pName := r.Form.Get("pname")
+	if pName=="" {
+		http.NotFound(w, r)
+		return
+	}
+
+	rows, err := dbconfig.HostDB.Query(`select pid from projects where pname=? ;`, pName)
+	if err!=nil {
+		NewJSONError(err.Error(), 502, w)
+		return
+	}
+	defer rows.Close()
+	pid := -1
+	if rows.Next() {
+		err = rows.Scan(&pid)
+		if err!=nil {
+			NewJSONError(err.Error(), 502, w)
+			return
+		}
+	} else {
+		http.NotFound(w, r)
+		return
+	}
+
+	uid, _ := globalsession.GetUid(w, r)
+	group := globalsession.GetGroupToProject(uid, pid)
+	gs := strings.NewReader(globalsession.UserGroupToString(group))
+	_, err = io.Copy(w, gs)
+	if err!=nil {
+		NewJSONError(err.Error(), 502, w)
+		return
+	}
+
 }
