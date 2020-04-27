@@ -3,6 +3,7 @@ package handler
 import (
 	"autodb/host/dbconfig"
 	"autodb/host/globalsession"
+	"bytes"
 	"encoding/json"
 	"errors"
 	"io"
@@ -39,27 +40,14 @@ func readJSONFormInBody(w http.ResponseWriter, r *http.Request) (map[string]inte
 	if r.Method=="GET" {
 		return make(map[string]interface{}), nil
 	}
-	bodyInBytes := make([]byte, r.ContentLength*2) //make sure we can read the entire body.
-	ret, err := r.Body.Read(bodyInBytes)
-	bodyInBytes = bodyInBytes[:ret]
-	if ret == 0 {
-		return make(map[string]interface{}), nil
-	}
-	if err!=io.EOF {
-		if err==nil {
-			test := make([]byte, 1)
-			ret, err := r.Body.Read(test)
-			if ret!=0 || err!=io.EOF {
-				NewJSONError("http body too long2", 400, w)
-				return nil, errors.New("form error")
-			}
-		} else {
-			NewJSONError(err.Error(), 502, w)
-			return nil, errors.New("form error")
-		}
+	var bodyInBytes bytes.Buffer
+	_, err := io.Copy(&bodyInBytes,r.Body)
+	if err!=nil {
+		NewJSONError(err.Error(), 502, w)
+		return nil, err
 	}
 	inputForm := make(map[string]interface{})
-	err = json.Unmarshal(bodyInBytes, &inputForm)
+	err = json.Unmarshal(bodyInBytes.Bytes(), &inputForm)
 	if err != nil {
 		NewJSONError("parameters are not in JSON format", 400, w)
 		return nil, errors.New("form error")
