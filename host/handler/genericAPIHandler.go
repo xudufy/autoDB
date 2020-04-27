@@ -36,6 +36,7 @@ func filterTypePrefixInForm(inputForm map[string]interface{}) error {
 	return nil
 }
 
+//if r.Body is empty, return {}, nil;
 func readJSONFormInBody(w http.ResponseWriter, r *http.Request) (map[string]interface{}, error) {
 	if r.Method=="GET" {
 		return make(map[string]interface{}), nil
@@ -46,6 +47,11 @@ func readJSONFormInBody(w http.ResponseWriter, r *http.Request) (map[string]inte
 		NewJSONError(err.Error(), 502, w)
 		return nil, err
 	}
+
+	if bodyInBytes.Len()==0 {
+		bodyInBytes.Write([]byte("{}"))
+	}
+
 	inputForm := make(map[string]interface{})
 	err = json.Unmarshal(bodyInBytes.Bytes(), &inputForm)
 	if err != nil {
